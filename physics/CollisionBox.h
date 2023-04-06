@@ -6,7 +6,22 @@
 #define ASTEROIDS_COLLISIONBOX_H
 
 
+#include "Vec2d.h"
+
+// object for collision detection
+// actually not a box but a circle, but who cares
 class CollisionBox {
+private:
+    float radius;
+    //  Vec2d &coordinates;
+public:
+    Vec2d *coordinates;
+
+    CollisionBox(Vec2d *coordinates, float radius) :
+            coordinates(coordinates),
+            radius(radius) {};
+
+    bool collideWith(CollisionBox &anotherBox);
 
 };
 

@@ -9,6 +9,8 @@
 #include "../physics/Vec2d.h"
 #include "../physics/Matrix2d.h"
 #include "../drawer/Drawer.h"
+#include "Object.h"
+#include "Bullet.h"
 
 
 
@@ -26,41 +28,18 @@
  *    /   \/   \
  *
  */
-class Ship {
+class Ship : public Object {
 private:
-
-    // coordinates of this Ship
-    Vec2d cord;
-
-    // local speed of this Ship
-    Vec2d speed;
-
-    // local acceleration vector of this Ship
-    Vec2d acc;
-
-    // rotational matrix to transform local coordinates to global
-    Matrix2d rotation;
 
 
 public:
     Ship();
-    void rotateByDeg(double a);
 
-    Vec2d getLocalAcceleration();
+    void draw(Drawer *drawer) override;
 
-    void setLocalAcceleration(Vec2d acc);
+    void onCollision(std::vector<Object *> &objects, std::vector<Object *>::iterator it) override;
 
-    Vec2d getLocalSpeed();
-
-    void setLocalSpeed(Vec2d speed);
-
-    Vec2d getGlobalSpeed();
-
-    Vec2d getCords();
-
-    void setCords(Vec2d cord);
-
-    void draw(Drawer *drawer);
+    Bullet *shoot();
 
 };
 

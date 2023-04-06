@@ -10,47 +10,7 @@ Ship::Ship() {
             {0, 1},
             {1, 0}
     };
-    this->rotation.setMatrix(matr);
-}
-
-void Ship::rotateByDeg(double a) {
-    //calculate new rotational matrix
-    double matr[2][2] = {
-            {std::cos(a), -std::sin(a)},
-            {std::sin(a), std::cos(a)}
-    };
-    rotation = rotation * Matrix2d(matr);
-}
-
-Vec2d Ship::getLocalAcceleration() {
-    return acc;
-}
-
-Vec2d Ship::getGlobalSpeed() {
-
-    //do transformation using local speed and rotational matrix
-    return speed;
-}
-
-Vec2d Ship::getLocalSpeed() {
-    return speed;
-}
-
-Vec2d Ship::getCords() {
-    return cord;
-}
-
-void Ship::setCords(Vec2d cord) {
-    this->cord = cord;
-}
-
-void Ship::setLocalSpeed(Vec2d speed) {
-    this->speed = speed;
-
-}
-
-void Ship::setLocalAcceleration(Vec2d acc) {
-    this->acc = acc;
+    this->transform.setMatrix(matr);
 }
 
 void Ship::draw(Drawer *drawer) {
@@ -61,11 +21,11 @@ void Ship::draw(Drawer *drawer) {
     Vec2d end1(8, -2.5);
     Vec2d end2(8, 2.5);
 
-    sideStart = rotation * sideStart;
-    Lside = rotation * Lside;
-    Rside = rotation * Rside;
-    end1 = rotation * end1;
-    end2 = rotation * end2;
+    sideStart = transform * sideStart;
+    Lside = transform * Lside;
+    Rside = transform * Rside;
+    end1 = transform * end1;
+    end2 = transform * end2;
 
 
     // do rotational matrix transform
@@ -87,5 +47,17 @@ void Ship::draw(Drawer *drawer) {
 
 }
 
+void Ship::onCollision(std::vector<Object *> &objects, std::vector<Object *>::iterator it) {
+    this->cord.x = 250;
+    this->cord.y = 250;
+    this->speed.x = 0;
+    this->speed.y = 0;
+}
 
+Bullet *Ship::shoot() {
+    Bullet *bullet = new Bullet(getCords() + (transform * Vec2d(-15, 0)),
+                                getTransformationMatrix(),
+                                getGlobalSpeed() + transform * Vec2d(-20, 0));
+    return bullet;
+}
 

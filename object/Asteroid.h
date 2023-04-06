@@ -6,7 +6,17 @@
 #define ASTEROIDS_ASTEROID_H
 
 
-class asteroid {
+#include "Object.h"
+
+class Asteroid : public Object {
+    Matrix2d scale;
+
+public:
+    Asteroid(float size);
+
+    void draw(Drawer *drawer) override;
+
+    void onCollision(std::vector<Object *> &objects, std::vector<Object *>::iterator it) override;
 
 };
 
