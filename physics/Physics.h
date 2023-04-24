@@ -8,6 +8,7 @@
 
 #include "../object/Object.h"
 #include <vector>
+#include <list>
 
 class Physics {
     int height;
@@ -15,12 +16,10 @@ class Physics {
 
 public:
 
-    explicit Physics( int height, int width, std::vector<Object *> &objects) :
+    explicit Physics( int height, int width) :
             height(height),
-            width(width),
-            objects(objects){};
+            width(width){};
 
-    std::vector<Object *> &objects;
 
     void loop();
 };

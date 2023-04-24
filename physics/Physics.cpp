@@ -2,11 +2,20 @@
 // Created by vm on 23.7.3.
 //
 
+#include <set>
 #include "Physics.h"
+#include "../world/World.h"
+#include <typeinfo>
 
 void Physics::loop() {
-    for (auto it = objects.begin(); it != objects.end(); ++it) {
+    std::vector<std::list<Object *>::iterator> objectsToDelete;
+
+    auto objects = World::getInstance()->getObjects();
+
+    for (auto it = objects->begin(); it != objects->end(); ++it) {
         Object *object = *it;
+        if (object == nullptr)
+            continue;
         //acceleration
         object->setGlobalSpeed(object->getGlobalSpeed() + object->getGlobalAcceleration());
 
@@ -16,6 +25,7 @@ void Physics::loop() {
         //check for out of screen
 
         if (object->getCords().x < 0)
+
             object->getCords().x = width;
 
         if (object->getCords().x > width)
@@ -26,27 +36,47 @@ void Physics::loop() {
 
         if (object->getCords().y > height)
             object->getCords().y = 0;
-        //check for collision//call on collision
 
-        for (auto it2 = objects.begin(); it2 != objects.end(); ++it2) {
+        //check for collision//call on collision
+        for (auto it2 = objects->begin(); it2 != objects->end(); ++it2) {
             Object *obj2 = *it2;
-            //   printf("1:%p | 2:%p\n", *it, *it2);
             if (object == obj2)
                 continue;
 
-            if((long)&(obj2->getCollisionBox()) == 0x10000){
-                printf("asdasdasd");
+            std::string str = typeid(object).name();
+            if (str == "9Shockwave") {
+                printf("as");
             }
+            bool b1 = object->getCollisionBox().collideWith(obj2->getCollisionBox());
+            bool b2 = obj2->getCollisionBox().collideWith(object->getCollisionBox());
+            if (b1 &&
+                b2) {
 
-            try {
-                if (object->getCollisionBox().collideWith(obj2->getCollisionBox())) {
-                    object->onCollision(objects, it);
+
+                bool deleteObj2 = obj2->onCollision(*object, (obj2->getCords() - object->getCords()).normalise());
+                bool deleteObj = object->onCollision(*obj2, (obj2->getCords() - object->getCords()).normalise());
+
+                if (deleteObj2) {
+                    it2 = objects->erase(it2);
+                    delete obj2;
                 }
-            } catch (std::exception &e) {
-                printf("%s", e.what());
+                if (deleteObj) {
+                    it = objects->erase(it);
+                    delete object;
+                    break;
+
+                }
             }
-
         }
+    }
 
+    for (int i = 0; i < objectsToDelete.size(); ++i) {
+
+        auto it = objectsToDelete[i];
+
+        Object *obj = *it;
+
+        objects->erase(it);
+        delete obj;
     }
 }

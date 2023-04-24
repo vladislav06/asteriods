@@ -2,23 +2,19 @@
 // Created by vm on 23.27.3.
 //
 
-#include "Bullet.h"
+#include "Rocket.h"
+#include "../../world/World.h"
+#include "../effects/Smoke.h"
+#include "../effects/Shockwave.h"
 #include <cmath>
 
 # define M_PI  3.14159265358979323846
 
-Bullet::Bullet(Vec2d pos, Matrix2d dir, Vec2d speed) {
-    this->cord = pos;
-    this->speed = speed;
-    //compensate for different angle
-    double matr[2][2] = {
-            {0, -1},
-            {1, 0}
-    };
-    transform = Matrix2d(matr) * dir;
+Rocket::Rocket(Vec2d pos, Matrix2d dir, Vec2d speed) : Projectile(pos, dir, speed) {
+
 }
 
-void Bullet::draw(Drawer *drawer) {
+void Rocket::draw(Drawer *drawer) {
 
     Vec2d pos[] = {
             Vec2d(2, 17),
@@ -38,9 +34,9 @@ void Bullet::draw(Drawer *drawer) {
     //rotate and
     //move model a bit
     for (int i = 0; i < 11; i++) {
-        pos[i] += Vec2d(-7,-10);
+        pos[i] += Vec2d(-7, -10);
         pos[i] = transform * pos[i];
-        pos[i] = pos[i] + cord;
+        pos[i] = pos[i] + coordinates;
     }
 
     Color color(0, 0, 0, 255);
@@ -48,7 +44,19 @@ void Bullet::draw(Drawer *drawer) {
 
 }
 
-void Bullet::onCollision(std::vector<Object *> &objects, std::vector<Object *>::iterator it) {
-    objects.erase(it);
-    delete this;
+bool Rocket::onCollision(Object &object, Vec2d direction) {
+    World::getInstance()->getObjects()->push_back(new Shockwave(this->coordinates));
+    return true;
 }
+
+void Rocket::onTick() {
+
+}
+
+int Rocket::gunCoolDown() {
+    return 60;
+}
+
+//Projectile* Rocket::instance() {
+//    return new Rocket();
+//}

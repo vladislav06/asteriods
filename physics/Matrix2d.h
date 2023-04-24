@@ -20,6 +20,10 @@ private:
 public:
     Matrix2d();
 
+    /// creates rotation matrix with given angle
+    Matrix2d(double deg);
+
+
     explicit Matrix2d(double matr[2][2]);
 
     void setMatrix(double matr[2][2]);

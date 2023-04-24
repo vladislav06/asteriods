@@ -5,7 +5,7 @@
 #include "Object.h"
 
 
-Object::Object() : collisionBox(&this->cord, 5) {
+Object::Object(): collisionBox(&this->coordinates, 5) {
 
 }
 
@@ -19,19 +19,19 @@ void Object::rotateByDeg(double a) {
 }
 
 Vec2d Object::getLocalAcceleration() {
-    return acc;
+    return acceleration;
 }
 
 void Object::setLocalAcceleration(Vec2d acc) {
-    this->acc = acc;
+    this->acceleration = acc;
 }
 
 Vec2d Object::getLocalSpeed() {
     return transform * speed;
 }
 
-void Object::setLocalSpeed(Vec2d speed) {
-    this->speed = transform * speed;
+void Object::setLocalSpeed(Vec2d spd) {
+    this->speed = transform * spd;
 }
 
 Vec2d Object::getGlobalSpeed() {
@@ -39,11 +39,11 @@ Vec2d Object::getGlobalSpeed() {
 }
 
 Vec2d &Object::getCords() {
-    return cord;
+    return coordinates;
 }
 
 void Object::setCords(Vec2d cord) {
-    this->cord = cord;
+    this->coordinates = cord;
 
 }
 
@@ -51,15 +51,24 @@ Matrix2d Object::getTransformationMatrix() {
     return transform;
 }
 
-void Object::setGlobalSpeed(Vec2d speed) {
-    this->speed = speed;
+void Object::setGlobalSpeed(Vec2d spd) {
+    this->speed = spd;
 }
 
 Vec2d Object::getGlobalAcceleration() {
-    return this->transform * this->acc;
+    return this->transform * this->acceleration;
 }
 
 CollisionBox & Object::getCollisionBox() {
     return this->collisionBox;
+}
+
+void Object::tick() {
+    time++;
+    onTick();
+}
+
+bool Object::isMarkedForRemoval() {
+    return markedForRemoval;
 }
 

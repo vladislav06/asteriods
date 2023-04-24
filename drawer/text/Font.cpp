@@ -1119,7 +1119,7 @@ Uint8 FC_LoadFontFromTTF(FC_Font *font, SDL_Renderer *renderer, TTF_Font *ttf, S
 
         // Copy glyphs from the surface to the font texture and store the position data
         // Pack row by row into a square texture
-        // Try figuring out dimensions that make sense for the font size.
+        // Try figuring out dimensions that getProjectile sense for the font size.
         unsigned int w = font->height * 12;
         unsigned int h = font->height * 12;
         SDL_Surface *surfaces[FC_LOAD_MAX_SURFACES];
@@ -1761,7 +1761,7 @@ static FC_StringList *FC_ExplodeBreakingSpace(const char *text, FC_StringList **
     size = 0;
     start = end = text;
     while (1) {
-        // Add any characters here that should make separate words (except for \n?)
+        // Add any characters here that should getProjectile separate words (except for \n?)
         if (*end == ' ' || *end == '\t' || *end == '\0') {
             FC_StringListPushBackBytes(node, start, size);
             FC_StringListPushBackBytes(spaces, end, 1);

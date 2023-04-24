@@ -7,17 +7,16 @@
 
 
 #include <vector>
+#include <list>
 #include "../object/Object.h"
+#include "../world/World.h"
 
 class DrawLoop {
 private:
     Drawer &drawer;
 public:
-    DrawLoop(Drawer &drawer, std::vector<Object *> &objects) :
-            drawer(drawer),
-            objects(objects) {};
-
-    std::vector<Object *> &objects;
+    DrawLoop(Drawer &drawer) :
+            drawer(drawer) {};
 
     void loop();
 

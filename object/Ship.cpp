@@ -2,8 +2,21 @@
 // Created by vm on 23.6.3.
 //
 
+#include <memory>
 #include "Ship.h"
 #include "math.h"
+#include "projectiles/Bullet.h"
+
+
+// stuff for changing projectile type
+typedef Projectile *(*Creator)(Vec2d pos, Matrix2d dir, Vec2d speed);
+
+template<typename T>
+Projectile *getProjectile(Vec2d pos, Matrix2d dir, Vec2d speed) {
+    return new T(pos, dir, speed);
+}
+
+Creator projectileTypes[3];
 
 Ship::Ship() {
     double matr[2][2] = {
@@ -11,6 +24,11 @@ Ship::Ship() {
             {1, 0}
     };
     this->transform.setMatrix(matr);
+
+    projectileTypes[ROCKET] = getProjectile<Rocket>;
+    projectileTypes[BULLET] = getProjectile<Bullet>;
+
+
 }
 
 void Ship::draw(Drawer *drawer) {
@@ -32,11 +50,11 @@ void Ship::draw(Drawer *drawer) {
 
 
     //do coordinate shift
-    sideStart += this->cord;
-    Lside += this->cord;
-    Rside += this->cord;
-    end1 += this->cord;
-    end2 += this->cord;
+    sideStart += this->coordinates;
+    Lside += this->coordinates;
+    Rside += this->coordinates;
+    end1 += this->coordinates;
+    end2 += this->coordinates;
 
     //draw
     Color color{};
@@ -47,17 +65,37 @@ void Ship::draw(Drawer *drawer) {
 
 }
 
-void Ship::onCollision(std::vector<Object *> &objects, std::vector<Object *>::iterator it) {
-    this->cord.x = 250;
-    this->cord.y = 250;
+bool Ship::onCollision(Object &object, Vec2d direction) {
+    this->coordinates.x = 250;
+    this->coordinates.y = 250;
     this->speed.x = 0;
     this->speed.y = 0;
+    return false;
 }
 
-Bullet *Ship::shoot() {
-    Bullet *bullet = new Bullet(getCords() + (transform * Vec2d(-15, 0)),
-                                getTransformationMatrix(),
-                                getGlobalSpeed() + transform * Vec2d(-20, 0));
-    return bullet;
+
+Projectile *Ship::shoot() {
+
+    if (cooldownTime == 0) {
+
+        Projectile *projectile = projectileTypes[projectileType](getCords() + (transform * Vec2d(-25, 0)),
+                                                                 getTransformationMatrix(),
+                                                                 getGlobalSpeed() + transform * Vec2d(-20, 0));
+        cooldownTime = projectile->gunCoolDown();
+
+        return projectile;
+    } else {
+        return nullptr;
+    }
+}
+
+void Ship::onTick() {
+    if (cooldownTime > 0) {
+        cooldownTime--;
+    }
+}
+
+void Ship::setProjectileType(Ship::ProjectileType projType) {
+    this->projectileType = projType;
 }
 

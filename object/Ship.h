@@ -10,7 +10,7 @@
 #include "../physics/Matrix2d.h"
 #include "../drawer/Drawer.h"
 #include "Object.h"
-#include "Bullet.h"
+#include "projectiles/Rocket.h"
 
 
 
@@ -29,17 +29,33 @@
  *
  */
 class Ship : public Object {
+public:
+
+    enum ProjectileType {
+        ROCKET,
+        BULLET,
+        LASER,
+    };
+
 private:
 
+    int cooldownTime = 0;
+
+    ProjectileType projectileType = BULLET;
 
 public:
     Ship();
 
+
     void draw(Drawer *drawer) override;
 
-    void onCollision(std::vector<Object *> &objects, std::vector<Object *>::iterator it) override;
+    bool onCollision(Object &object, Vec2d direction) override;
 
-    Bullet *shoot();
+    Projectile *shoot();
+
+    void onTick() override;
+
+    void setProjectileType(ProjectileType projType);
 
 };
 

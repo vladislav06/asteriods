@@ -6,12 +6,12 @@
 
 void DrawLoop::loop() {
     drawer.fill(255, 255, 255);
-    for (Object *object: objects) {
+    for (Object *object: *World::getInstance()->getObjects()) {
 
         object->draw(&drawer);
 
     }
-    drawer.text("lol", Vec2d(50, 50));
-    drawer.present();
 
+
+    drawer.present();
 }

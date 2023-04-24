@@ -13,16 +13,13 @@
 class CollisionBox {
 private:
     float radius;
-    //  Vec2d &coordinates;
-public:
     Vec2d *coordinates;
-
+public:
     CollisionBox(Vec2d *coordinates, float radius) :
-            coordinates(coordinates),
-            radius(radius) {};
+            coordinates(coordinates), radius(radius) {};
+
 
     bool collideWith(CollisionBox &anotherBox);
-
 };
 
 

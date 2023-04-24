@@ -14,6 +14,12 @@
 class Drawer {
 private:
     SDL_Renderer *renderer;
+    int fontsize = 11;
+public:
+    int getFontsize() const;
+
+    void setFontsize(int fontsize);
+
 public:
     void init(SDL_Window *window);
     void fill(int r, int g, int b);

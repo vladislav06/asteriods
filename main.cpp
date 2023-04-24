@@ -7,8 +7,11 @@
 #else
 
 #include <SDL2/SDL.h> /* macOS- and GNU/Linux-specific */
+#include <list>
+
 #endif
 
+#include "typeinfo"
 #include "drawer/Drawer.h"
 #include "object/Ship.h"
 #include "physics/Physics.h"
@@ -16,15 +19,17 @@
 #include "drawer/DrawLoop.h"
 #include "physics/util.h"
 #include "object/Dummy.h"
+#include "world/World.h"
+#include "object/Text.h"
 
 #define WIDTH 800
 #define HEIGHT 600
 
-std::vector<Object *> objects;
-
+World *world = World::getInstance();
 Drawer drawer;
-DrawLoop drawLoop(drawer,objects);
-Physics physics(HEIGHT, WIDTH,objects);
+Text text;
+DrawLoop drawLoop(drawer);
+Physics physics(HEIGHT, WIDTH);
 Ship ship;
 
 void loop() {
@@ -34,7 +39,21 @@ void loop() {
 
     Color color{};
 
+    auto objects = World::getInstance()->getObjects();
+    objects->push_back(&text);
+
+
     while (running) {
+        //tick every object
+        for (auto it = objects->begin(); it != objects->end(); ++it) {
+            (*it)->tick();
+            if ((*it)->isMarkedForRemoval()) {
+                delete *it;
+                it = objects->erase(it);
+            }
+        }
+
+
         while (SDL_PollEvent(&event)) {
             //quit
             if (event.type == SDL_QUIT) {
@@ -57,18 +76,29 @@ void loop() {
             ship.rotateByDeg(-0.1);
         }
         if (key[SDL_SCANCODE_SPACE]) {
-
-            Bullet *bullet = ship.shoot();
-            objects.push_back(bullet);
+            Projectile *bullet = ship.shoot();
+            if (bullet != nullptr)
+                objects->push_back(bullet);
+        }
+        if (key[SDL_SCANCODE_Q]) {
+            ship.setProjectileType(Ship::ROCKET);
         }
 
 
+        //debug//
+        std::string objList = "";
+
+        for (Object *obj: *objects) {
+            objList += typeid(*obj).name();
+            objList += '\n';
+        }
+        text.text = objList;
+        //debug//
+
         physics.loop();
         drawLoop.loop();
-
         SDL_Delay(16);
     }
-
 }
 
 int main() {
@@ -84,15 +114,21 @@ int main() {
 
     //create objects
     ship.setCords(Vec2d(HEIGHT / 2, WIDTH / 2));
-    objects.push_back(&ship);
-
-    for (int i = 0; i < 30; i++) {
+    World::getInstance()->getObjects()->push_back(&ship);
+//
+    for (int i = 0; i < 20; i++) {
         Asteroid *asteroid = new Asteroid((float) ((float) std::rand() / (float) RAND_MAX) * 2);
         asteroid->setCords(getRandomVector(500));
         asteroid->setLocalSpeed(getRandomVector(10));
 
-        objects.push_back(asteroid);
+        World::getInstance()->getObjects()->push_back(asteroid);
     }
+
+//    Asteroid *asteroid = new Asteroid(1);
+//    asteroid->setCords(Vec2d(200, 300));
+//    World::getInstance()->getObjects()->push_back(asteroid);
+
+    //
 
 
     loop();

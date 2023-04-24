@@ -18,7 +18,12 @@ void Drawer::init(SDL_Window *window) {
         fprintf(stderr, "Could not create renderer\n");
     }
     font = FC_CreateFont();
-    FC_LoadFont(font, renderer, "/home/vm/Documents/asteroids/cmake-build-debug/Sans.ttf", 50, FC_MakeColor(255,0,0,255), TTF_STYLE_NORMAL);
+    FC_LoadFont(font,
+                renderer,
+                "/home/vm/Documents/asteroids/cmake-build-debug/Sans.ttf",
+                11,
+                FC_MakeColor(255, 0, 0, 255),
+                TTF_STYLE_NORMAL);
 
 
 }
@@ -66,15 +71,23 @@ void Drawer::polygon(Vec2d *pos, int n, Color color) {
 }
 
 void Drawer::text(std::string txt, Vec2d pos) {
-
-
     //this opens a font style and sets a size
     FC_Draw(font, renderer, pos.x, pos.y, txt.c_str());
 
 }
 
 void Drawer::ellipse(Vec2d pos, Vec2d radius) {
-    ellipseRGBA(renderer,pos.x,pos.y,radius.x,radius.y,0,0,0,255);
+    ellipseRGBA(renderer, pos.x, pos.y, radius.x, radius.y, 0, 0, 0, 255);
+}
+
+int Drawer::getFontsize() const {
+    return fontsize;
+}
+
+void Drawer::setFontsize(int fontsize) {
+    if (fontsize <= 0)
+        return;
+    Drawer::fontsize = fontsize;
 }
 
 

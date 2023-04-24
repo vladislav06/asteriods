@@ -10,9 +10,8 @@
 #include "Vec2d.h"
 
 
-Vec2d getRandomVector(float max) {
-    return Vec2d((float) ((float) std::rand() / (float) RAND_MAX) * max - (max / 2),
-                 (float) ((float) std::rand() / (float) RAND_MAX) * max - (max / 2));
-}
+Vec2d getRandomVector(float max);
+
+int getRandomInt(int max);
 
 #endif //ASTEROIDS_UTIL_H

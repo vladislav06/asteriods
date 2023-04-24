@@ -15,7 +15,9 @@ public:
 
     void draw(Drawer *drawer) override;
 
-    void onCollision(std::vector<Object *> &objects, std::vector<Object *>::iterator it) override;
+    bool onCollision(Object &object, Vec2d direction) override;
+
+    void onTick() override;
 
 };
 

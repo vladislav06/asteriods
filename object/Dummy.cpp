@@ -31,7 +31,12 @@ void Dummy::draw(Drawer *drawer) {
 
 }
 
-void Dummy::onCollision(std::vector<Object *> &objects, std::vector<Object *>::iterator it) {
+bool Dummy::onCollision(Object &object, Vec2d direction) {
+    return false;
+
+}
+
+void Dummy::onTick() {
 
 }
 

@@ -15,23 +15,30 @@
 
 class Object {
 protected:
-    // coordinates of this object
-    Vec2d cord;
+    /// coordinates of this object
+    Vec2d coordinates;
 
-    // global speed of this object
+    /// global speed of this object
     Vec2d speed;
 
-    // local acceleration vector of this object
-    Vec2d acc;
+    /// local acceleration vector of this object
+    Vec2d acceleration;
 
-    // object transformation matrix (rotation, scale)
+    /// object transformation matrix (rotation, scale)
     Matrix2d transform;
 
-    // collision box for this object
+    /// collision box for this object
     CollisionBox collisionBox;
+
+    /// internal object timer that progresses every frame
+    int time = 0;
+
+    bool markedForRemoval = false;
 
 public:
     Object();
+
+    ~Object() = default;
 
     void rotateByDeg(double a);
 
@@ -45,23 +52,32 @@ public:
 
     Vec2d getLocalSpeed();
 
-    void setLocalSpeed(Vec2d speed);
+    void setLocalSpeed(Vec2d spd);
 
     Vec2d getGlobalSpeed();
 
-    void setGlobalSpeed(Vec2d speed);
+    void setGlobalSpeed(Vec2d spd);
 
     Vec2d &getCords();
 
     void setCords(Vec2d cord);
 
-    CollisionBox & getCollisionBox();
+    CollisionBox &getCollisionBox();
 
-    virtual void onCollision(std::vector<Object *> &objects, std::vector<Object *>::iterator it) = 0;
+    bool isMarkedForRemoval();
 
+    /// Triggers internal timer
+    void tick();
+
+
+    /// Returns true if object needs to be destroyed
+    virtual bool onCollision(Object &object, Vec2d direction) = 0;
+
+    /// Draws object using drawer
     virtual void draw(Drawer *drawer) = 0;
 
-
+protected:
+    virtual void onTick() = 0;
 
 };
 
