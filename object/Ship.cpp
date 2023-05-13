@@ -6,6 +6,7 @@
 #include "Ship.h"
 #include "math.h"
 #include "projectiles/Bullet.h"
+#include "projectiles/Laser.h"
 
 
 // stuff for changing projectile type
@@ -27,6 +28,7 @@ Ship::Ship() {
 
     projectileTypes[ROCKET] = getProjectile<Rocket>;
     projectileTypes[BULLET] = getProjectile<Bullet>;
+    projectileTypes[LASER] = getProjectile<Laser>;
 
 
 }
@@ -78,9 +80,10 @@ Projectile *Ship::shoot() {
 
     if (cooldownTime == 0) {
 
-        Projectile *projectile = projectileTypes[projectileType](getCords() + (transform * Vec2d(-25, 0)),
-                                                                 getTransformationMatrix(),
-                                                                 getGlobalSpeed() + transform * Vec2d(-20, 0));
+        Projectile *projectile = projectileTypes[this->selectedProjectile](getCords() + (transform * Vec2d(-25, 0)),
+                                                                           getTransformationMatrix(),
+                                                                           getGlobalSpeed() +
+                                                                           transform * Vec2d(-20, 0));
         cooldownTime = projectile->gunCoolDown();
 
         return projectile;
@@ -95,7 +98,26 @@ void Ship::onTick() {
     }
 }
 
-void Ship::setProjectileType(Ship::ProjectileType projType) {
-    this->projectileType = projType;
+Ship::ProjectileType Ship::getCurrentProjectileType() {
+    return (ProjectileType) this->selectedProjectile;
+}
+
+void Ship::setCurrentProjectileType(Ship::ProjectileType type) {
+    this->selectedProjectile = type;
+}
+
+void Ship::selectNextProjectileType() {
+    selectedProjectile++;
+    if (selectedProjectile > projectileTypeSize) {
+        selectedProjectile = 0;
+    }
+}
+
+void Ship::selectPreviousProjectileType() {
+    selectedProjectile--;
+    if (selectedProjectile < 0) {
+        selectedProjectile = projectileTypeSize;
+    }
+
 }
 

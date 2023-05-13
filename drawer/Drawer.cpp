@@ -90,5 +90,17 @@ void Drawer::setFontsize(int fontsize) {
     Drawer::fontsize = fontsize;
 }
 
+void Drawer::rectangle(Vec2d p1, Vec2d p2, Color color) {
+
+    SDL_Rect rect;
+    rect.x = p1.x;
+    rect.y = p1.y;
+    rect.h = p2.x - p1.x;
+    rect.w = p2.y - p1.y;
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
+    SDL_RenderFillRect(renderer, &rect);
+
+}
+
 
 

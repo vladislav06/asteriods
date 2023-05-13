@@ -15,6 +15,7 @@ class Drawer {
 private:
     SDL_Renderer *renderer;
     int fontsize = 11;
+
 public:
     int getFontsize() const;
 
@@ -22,13 +23,23 @@ public:
 
 public:
     void init(SDL_Window *window);
+
     void fill(int r, int g, int b);
+
     void line(int x1, int y1, int x2, int y2, Color color);
-    void line(Vec2d pos1,Vec2d pos2, Color color);
+
+    void line(Vec2d pos1, Vec2d pos2, Color color);
+
     void circle(Vec2d pos, float radius);
+
+    void rectangle(Vec2d p1, Vec2d p2, Color color);
+
     void ellipse(Vec2d pos, Vec2d radius);
-    void polygon(Vec2d* pos,int n, Color color);
-    void text( std::string txt, Vec2d pos);
+
+    void polygon(Vec2d *pos, int n, Color color);
+
+    void text(std::string txt, Vec2d pos);
+
     void present();
 
 

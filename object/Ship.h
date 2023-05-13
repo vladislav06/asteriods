@@ -31,6 +31,7 @@
 class Ship : public Object {
 public:
 
+
     enum ProjectileType {
         ROCKET,
         BULLET,
@@ -41,7 +42,9 @@ private:
 
     int cooldownTime = 0;
 
-    ProjectileType projectileType = BULLET;
+    int selectedProjectile = 0;
+
+    const int projectileTypeSize = 2;
 
 public:
     Ship();
@@ -55,7 +58,15 @@ public:
 
     void onTick() override;
 
-    void setProjectileType(ProjectileType projType);
+
+    ProjectileType getCurrentProjectileType();
+
+    void setCurrentProjectileType(ProjectileType type);
+
+    void selectNextProjectileType();
+
+    void selectPreviousProjectileType();
+
 
 };
 

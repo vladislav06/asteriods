@@ -10,11 +10,11 @@
 
 class Projectile : public Object {
 public:
-     Projectile(Vec2d pos, Matrix2d dir, Vec2d speed);
+    Projectile(Vec2d pos, Matrix2d dir, Vec2d speed);
 
-  ///  virtual Projectile* instance() = 0;
+    ///  virtual Projectile* instance() = 0;
 
-  virtual int gunCoolDown() = 0;
+    virtual int gunCoolDown() = 0;
 
 };
 

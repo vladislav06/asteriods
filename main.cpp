@@ -28,7 +28,7 @@
 World *world = World::getInstance();
 Drawer drawer;
 Text text;
-DrawLoop drawLoop(drawer);
+DrawLoop drawLoop(drawer, HEIGHT, WIDTH);
 Physics physics(HEIGHT, WIDTH);
 Ship ship;
 
@@ -60,6 +60,17 @@ void loop() {
                 running = false;
                 break;
             }
+            //handle projectile change
+            if (event.type == SDL_KEYDOWN) {
+                if (event.key.keysym.sym == SDLK_q && event.key.repeat == 0) {
+                    ship.selectPreviousProjectileType();
+
+                }
+                if (event.key.keysym.sym == SDLK_e && event.key.repeat == 0) {
+                    ship.selectNextProjectileType();
+
+                }
+            }
         }
         SDL_PumpEvents();
         const Uint8 *key = SDL_GetKeyboardState(nullptr);
@@ -80,19 +91,16 @@ void loop() {
             if (bullet != nullptr)
                 objects->push_back(bullet);
         }
-        if (key[SDL_SCANCODE_Q]) {
-            ship.setProjectileType(Ship::ROCKET);
-        }
 
 
         //debug//
-        std::string objList = "";
+        std::string debug = "" + std::to_string(ship.getCurrentProjectileType());
 
         for (Object *obj: *objects) {
-            objList += typeid(*obj).name();
-            objList += '\n';
+            debug += typeid(*obj).name();
+            debug += '\n';
         }
-        text.text = objList;
+        text.text = debug;
         //debug//
 
         physics.loop();

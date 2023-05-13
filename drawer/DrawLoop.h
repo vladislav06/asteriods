@@ -14,9 +14,13 @@
 class DrawLoop {
 private:
     Drawer &drawer;
+    int height;
+    int width;
 public:
-    DrawLoop(Drawer &drawer) :
-            drawer(drawer) {};
+    DrawLoop(Drawer &drawer, int height, int width) :
+            drawer(drawer),
+            height(height),
+            width(width) {};
 
     void loop();
 
